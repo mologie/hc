@@ -3,6 +3,7 @@ package accessory
 import (
 	"crypto/md5"
 	"encoding/json"
+	"fmt"
 	"github.com/brutella/hc/log"
 )
 
@@ -24,9 +25,17 @@ func NewContainer() *Container {
 // AddAccessory adds an accessory to the container.
 // This method ensures that the accessory ids are valid and unique withing the container.
 func (m *Container) AddAccessory(a *Accessory) {
-	a.UpdateIDs()
-	a.ID = m.idCount
-	m.idCount++
+	a.updateIDs()
+	if a.ID == 0 {
+		a.ID = m.idCount
+		m.idCount++
+	}
+	for _, existing := range m.Accessories {
+		if existing.ID == a.ID {
+			panic(fmt.Sprintf("duplicated accessory ID %v is in use by %v and %v",
+				a.ID, existing.Info.Name.Value, a.Info.Name.Value))
+		}
+	}
 	m.Accessories = append(m.Accessories, a)
 }
 
