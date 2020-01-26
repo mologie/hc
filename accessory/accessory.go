@@ -63,9 +63,8 @@ func New(info Info, typ AccessoryType) *Accessory {
 	}
 
 	acc := &Accessory{
-		idCount: 1,
-		Info:    svc,
-		Type:    typ,
+		Info: svc,
+		Type: typ,
 	}
 
 	acc.AddService(acc.Info.Service)
@@ -100,8 +99,10 @@ func (a *Accessory) AddService(s *service.Service) {
 	a.Services = append(a.Services, s)
 }
 
-// UpdateIDs updates the service and characteirstic ids.
-func (a *Accessory) UpdateIDs() {
+// updateIDs updates the service and characteristic ids.
+func (a *Accessory) updateIDs() {
+	a.idCount = 1
+
 	for _, s := range a.Services {
 		s.ID = a.idCount
 		a.idCount++
